@@ -1,0 +1,23 @@
+name: AppConfig
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'config/appsettings.json'
+      - 'config/secretreferences.json'
+
+jobs:
+  syncconfig:
+    runs-on: ubuntu-latest
+    steps:
+      # checkout done so that files in the repo can be read by the sync
+      - uses: actions/checkout@v1
+      - uses: azure/appconfiguration-sync@v1
+        with:
+          configurationFile: 'config/appsettings.json'
+          format: 'json'
+          connectionString: ${{ secrets.APPCONFIGCONNECTIONSTRING }}
+          separator: ':'
+          strict: true
